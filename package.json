@@ -1,0 +1,43 @@
+{
+  "name": "db-scout",
+  "version": "0.0.1",
+  "description": "get database information, generate migration files, create models based on information",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "npx tsc && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/92P96AK/db-scout"
+  },
+  "keywords": [
+    "db",
+    "database",
+    "introspection",
+    "schema",
+    "metadata",
+    "ORM",
+    "TypeORM",
+    "SQL",
+    "database management",
+    "database exploration",
+    "db scout"
+  ],
+  "author": "pradip kharal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/92P96AK/db-scout/issues"
+  },
+  "homepage": "https://github.com/92P96AK/db-scout#readme",
+  "devDependencies": {
+    "@types/node": "^20.12.6",
+    "@types/pg": "^8.11.5",
+    "typescript": "^5.4.4"
+  },
+  "dependencies": {
+    "pg": "^8.11.5"
+  }
+}
