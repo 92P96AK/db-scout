@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs'
 import { IFile } from '../interface'
 
 export function createFile(file: IFile) {
