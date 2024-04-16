@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.0.3 (2024-04-17)
+## Version 4 (2024-04-17)
 
 ### Added
 - Initial release of DB-SCOUT.
