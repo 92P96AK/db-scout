@@ -1,6 +1,6 @@
 {
   "name": "db-scout",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "get database information, generate migration files, create models based on information",
   "main": "src/index.ts",
   "scripts": {
