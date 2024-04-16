@@ -1,6 +1,7 @@
 {
   "name": "db-scout",
   "version": "0.0.4",
+  "type": "module",
   "description": "get database information, generate migration files, create models based on information",
   "main": "src/index.ts",
   "scripts": {
@@ -39,6 +40,5 @@
   },
   "dependencies": {
     "pg": "^8.11.5"
-  },
-  "type": "module"
+  }
 }
