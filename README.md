@@ -31,7 +31,7 @@ DB-SCOUT can be configured using a `db-scout.config.json` file in your project's
  ```
  
  ```javascript
-const { DbScout } = require('db-scout');
+import { DbScout } from 'db-scout'
 
 new DbScout({
   sourceDbUrl: "",
