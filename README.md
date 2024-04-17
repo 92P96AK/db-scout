@@ -22,11 +22,11 @@ DB-SCOUT can be configured using a `db-scout.config.json` file in your project's
 
 ```json
 {
-  "databaseUrl": "YOUR_POSTGRESQL_DATABASE_URL",
+  "sourceDbUrl": "YOUR_POSTGRESQL_DATABASE_URL",
   "outputDirectory": "./migrations"
 }
 
- databaseUrl: The URL of your PostgreSQL database.
+ sourceDbUrl: The URL of your PostgreSQL database.
  outputDirectory: The directory where migration files will be generated.
  ```
  
@@ -35,7 +35,7 @@ import { DbScout } from 'db-scout'
 
 new DbScout({
   sourceDbUrl: "",
-  destinationUrl: ""
+  outputDirectory: ""
 }).getMigration();
 
 Your migration files will be created in a specified directory, ready for use with your PostgreSQL database migration tool. 

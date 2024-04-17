@@ -23,7 +23,7 @@ export class DbScout {
       } else {
         throw new Error(`You must provide valid configuration or sourceDbUrl in ${DB_SCOUT_CONFIG_JSON}`)
       }
-      this.folderDir = path.join(process.cwd(), this.props?.destinationUrl || DB_SCOUT)
+      this.folderDir = path.join(process.cwd(), this.props?.outputDirectory || DB_SCOUT)
       if (this.props.sourceDbUrl) {
         new ValidateDatabaseUrl(this.props.sourceDbUrl).validate()
       } else {

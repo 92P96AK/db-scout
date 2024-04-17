@@ -5,5 +5,5 @@ destinationUrl is a folder location where generated migration are created
 
 export interface Props {
   sourceDbUrl: string
-  destinationUrl?: string
+  outputDirectory?: string
 }
