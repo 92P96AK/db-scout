@@ -4,9 +4,8 @@
     "incremental": true,
     "esModuleInterop": true,
     "baseUrl": ".",
-    "module": "esnext",
+    "module": "commonjs",
     "target": "es2021",
-    "importHelpers": true,
     "noImplicitAny": false,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
@@ -23,18 +22,23 @@
     "strictNullChecks": true,
     "moduleResolution": "node",
     "newLine": "LF",
-    "outDir": "/dist",
+    "outDir": "./dist",
     "lib": [
       "es6", "esnext", "es2021"
     ],
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src",
-    "test", "index.ts",
+    "test",
+    "index.ts"
   ],
-  "exclude": ["**/node_modules", "node_modules","**/dist"]
+  "exclude": [
+    "**/node_modules",
+    "node_modules",
+    "**/dist"
+  ]
 }

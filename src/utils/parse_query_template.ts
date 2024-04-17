@@ -95,7 +95,7 @@ export class ParseQueryTemplate {
             .replace(
               `${DEFAULT_VALUE_TEMPLATE}`,
               col.column_default
-                ? DEFAULT_TEMPLATE.replace(`${DEFAULT_VALUE_TEMPLATE}`, col.column_default?.split('::')[0])
+                ? DEFAULT_TEMPLATE.replace(`${DEFAULT_VALUE_TEMPLATE}`, col.column_default?.split('::')[0] || '')
                 : '',
             )}${total_cols > i + 1 || has_primary_keys ? ',' : ''} \n`,
       )
@@ -104,7 +104,7 @@ export class ParseQueryTemplate {
 
   private getPrimaryKeysWithConstraints(pkeys: Array<IPFConstraintsRes>): string {
     return pkeys.length > 0
-      ? PRIMARY_KEY_TEMPLATE.replace(`${CONSTRAINT_NAME_TEMPLATE}`, pkeys[0]?.constraint_name).replace(
+      ? PRIMARY_KEY_TEMPLATE.replace(`${CONSTRAINT_NAME_TEMPLATE}`, pkeys[0]?.constraint_name || '').replace(
           `${PRIMARY_KEYS_TEMPLATE}`,
           `${pkeys.map((pk) => `"${pk.column_name}"`).join(',')}`,
         )

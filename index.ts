@@ -6,12 +6,12 @@ import { ParseQueryTemplate, ValidateDatabaseUrl, createFiles, readFileSync } fr
 import { DB_SCOUT, DB_SCOUT_CONFIG_JSON } from './src/constants'
 
 export class DbScout {
-  private props: Props
+  private props!: Props
   private folderDir: string
 
   constructor(props?: Props) {
-    const configUrl = path.join(process.cwd(), DB_SCOUT_CONFIG_JSON)
-    this.readConfigSync(configUrl, props)
+    this.folderDir = path.join(process.cwd(), DB_SCOUT_CONFIG_JSON)
+    this.readConfigSync(this.folderDir, props)
   }
   private readConfigSync(configUrl: string, prp?: Props) {
     try {
