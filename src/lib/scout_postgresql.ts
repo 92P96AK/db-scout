@@ -1,5 +1,5 @@
 import { IEnumRes, IPostgresRes, IPostgresTableRes } from '../interface'
-import { DB_INFO_QUERY, ENUM_INFO_QUERY, GEN_ENUM_QUERY } from '../queries'
+import { DB_INFO_QUERY, ENUM_INFO_QUERY } from '../queries'
 import { GLOBAL, PUBLIC, SCHEMA_TYPE_TEMPLATE } from '../constants'
 import { PostgresqlClient } from '../clients'
 
@@ -15,9 +15,6 @@ export class ScoutPostgresqlDb {
           DB_INFO_QUERY.replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.client.parsedUrl.schema || PUBLIC),
         )
         const enums: Array<IEnumRes> = await this.client.query(ENUM_INFO_QUERY)
-        // const enum_query: Array<any> = await this.client.query(GEN_ENUM_QUERY)
-
-        // console.log({enums,enum_query})
         resolve({
           database: this.client.parsedUrl.database,
           schema: this.client.parsedUrl.schema || PUBLIC,

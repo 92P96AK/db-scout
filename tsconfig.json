@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "./",
     "incremental": true,
     "esModuleInterop": true,
     "baseUrl": ".",
@@ -34,7 +34,7 @@
   },
   "include": [
     "src",
-    "test",
+    "test", "index.ts",
   ],
   "exclude": ["**/node_modules", "node_modules","**/dist"]
 }
