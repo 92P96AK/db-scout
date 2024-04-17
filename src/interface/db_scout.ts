@@ -1,6 +1,6 @@
 /*
-sourceDbUrl is a source database url
-destinationUrl is a folder location where generated migration are created
+@sourceDbUrl is a source database url
+@outputDirectory is a folder location where generated migration are created
 */
 
 export interface Props {
