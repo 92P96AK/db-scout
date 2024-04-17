@@ -8,7 +8,7 @@
 - Configuration file support (`db-scout.config.json`).
 - License file (`LICENSE`).
 
-## Version 0.0.2 (Upcoming)
+## Version 0.1.0 (Upcoming)
 
 ### Added
 - Support for MySQL, MariaDB, MongoDB, and other databases.

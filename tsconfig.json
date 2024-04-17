@@ -1,22 +1,31 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2017",
+    "rootDir": "src",
+    "incremental": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "module": "esnext",
+    "target": "es2021",
+    "importHelpers": true,
     "noImplicitAny": false,
     "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "alwaysStrict": true,
     "sourceMap": true,
     "declaration": true,
     "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
     "noImplicitReturns": true,
+    "noUnusedLocals": true,
     "stripInternal": true,
+    "noImplicitThis": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
     "newLine": "LF",
     "outDir": "/dist",
     "lib": [
-      "es2019",
-      "es2019.array"
+      "es6", "esnext", "es2021"
     ],
     "typeRoots": [
       "./node_modules/@types"
@@ -27,5 +36,5 @@
     "src",
     "test",
   ],
-  "exclude": ["**/node_modules", "node_modules"]
+  "exclude": ["**/node_modules", "node_modules","**/dist"]
 }
