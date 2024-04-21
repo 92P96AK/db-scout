@@ -9,9 +9,10 @@ export const CREATE_TABLE_QUERY = `/*
    https://github.com/92P96AK 
    */
 
+   {{CREATE_ENUM_QUERY}}
 -- Create table {{TABLE}} 
 
-CREATE TABLE {{SCHEMA}}.{{TABLE}} (
+CREATE TABLE IF NOT EXISTS {{SCHEMA}}."{{TABLE}}" (
  {{TABLE_COLUMNS_WITH_NAME_TYPE}}
   {{PRIMARY_KEYS}}
 );
@@ -21,12 +22,17 @@ CREATE TABLE {{SCHEMA}}.{{TABLE}} (
 {{FOREIGN_KEYS}}
 `
 
-export const CREATE_ENUM_TEMPLATE = 'CREATE TYPE {{NAME}} AS ENUM ({{VALUES}});'
-export const CREATE_ENUM_QUERY = `/*
-Created by pradip kharal 
-https://github.com/92P96AK 
-*/
-
+export const CREATE_ENUM_TEMPLATE = `
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_type WHERE typname = '{{NAME}}'
+    ) THEN
+        EXECUTE 'CREATE TYPE "{{NAME}}" AS ENUM ({{VALUES}})';
+    END IF;
+END $$;
+`
+export const CREATE_ENUM_QUERY = `
 -- Create enums
 
 {{CREATE_ENUM}}

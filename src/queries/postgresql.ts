@@ -26,6 +26,22 @@ ON
   ccu.constraint_name = c.conname
   AND tc.constraint_schema = c.connamespace::regnamespace::text
 ),
+ FOREIGN_KEY_RES AS (
+  SELECT
+  ccu.column_name,
+  tc.table_name,
+  tc.constraint_type,
+  tc.constraint_name,
+  pg_get_constraintdef(c.oid) AS constraint_values
+FROM
+  information_schema.constraint_column_usage ccu
+JOIN
+  information_schema.table_constraints tc ON ccu.constraint_name = tc.constraint_name
+JOIN
+  pg_catalog.pg_constraint c ON ccu.constraint_name = c.conname
+WHERE
+  tc.constraint_type = 'FOREIGN KEY'
+),
 UNIQUE_CONSTRAINTS_RES AS (
   SELECT tablename as table_name,indexname as index_name,indexdef as index_def
   FROM pg_indexes
@@ -61,7 +77,7 @@ COALESCE(
     SELECT array_to_json(array_agg(row_to_json(f_key)))
     FROM (
       SELECT cor.constraint_name,cor.constraint_values, cor.column_name,cor.table_name
-      from CONSTRAINTS_RES cor
+      from FOREIGN_KEY_RES cor
       where cor.table_name=ist.table_name 
       and cor.constraint_type= 'FOREIGN KEY'
     ) f_key
