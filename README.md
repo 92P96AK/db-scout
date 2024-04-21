@@ -15,30 +15,43 @@ You can install DB-SCOUT via npm:
 ```bash
 npm install db-scout
 ```
+
 ### Configuration
+
 # Configuration
 
-DB-SCOUT can be configured using a `db-scout.config.json` file in your project's root directory. Here's an example configuration:
+DB-SCOUT can be configured using a `dbscout.json` file in your project's root directory. Here's an example configuration:
 
 ```json
 {
-  "sourceDbUrl": "YOUR_POSTGRESQL_DATABASE_URL",
+  "sourceDbUrl": "YOUR_POSTGRESQL_SOURCE_DATABASE_URL",
+  "destinationDbUrl": "YOUR_POSTGRESQL_DESTINATION_DATABASE_URL",
   "outputDirectory": "./migrations"
 }
 
  sourceDbUrl: The URL of your PostgreSQL database.
  outputDirectory: The directory where migration files will be generated.
- ```
- 
- ```javascript
+```
+
+```javascript
 import { DbScout } from 'db-scout'
+const dbScout= new DbScout({
+ sourceDbUrl: "",
+ outputDirectory: "",
+ destinationDbUrl: ""
+})
 
-new DbScout({
-  sourceDbUrl: "",
-  outputDirectory: ""
-}).getMigration();
+to get migration files use 
 
-Your migration files will be created in a specified directory, ready for use with your PostgreSQL database migration tool. 
+await dbScout.getMigration();
+
+Your migration files will be created in a specified directory.
+
+also to migrate generated migration files to destination url simply use
+
+await dbScout.runMigrationWithTransaction() 
+it will run migration in transaction so if any error occurred it will roll back.
+
 ```
 
 ## License
@@ -52,4 +65,3 @@ DB-SCOUT is built using Node.js and PostgreSQL.
 ## Next Version Targets
 
 In the next version of DB-SCOUT, I plan to include support for additional databases, including MySQL, MariaDB, MongoDB, and others. Stay tuned for updates!
-
