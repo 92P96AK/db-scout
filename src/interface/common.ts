@@ -21,5 +21,17 @@ export interface IParseTemplatesRes {
   database: string
   schema: string
   tables: Array<IparseTableRes>
-  enum: string
+}
+
+export interface IMigrationOrder {
+  name: string
+  f_keys: Array<{
+    column_name: string
+    table_name: string
+  }>
+}
+
+export interface ImigrationRes extends IParseTemplatesRes {
+  migrationOrder: Array<string>
+  isCircularDependent: boolean
 }
