@@ -18,13 +18,9 @@ import {
   CONSTRAINT_VALUE_TEMPLATE,
   INDEX_VALUE_TEMPLATE,
   UNIQUE_INDEXES_TEMPLATE,
-  ENUM_NAME_TEMPLATE,
-  ENUM_VALUE_TEMPLATE,
-  CREATE_ENUM_QUERY_TEMPLATE,
+  CREATE_ENUM_QUERY,
 } from '../constants'
 import {
-  CREATE_ENUM_QUERY,
-  CREATE_ENUM_TEMPLATE,
   CREATE_TABLE_QUERY,
   DEFAULT_TEMPLATE,
   FOREIGN_KEY_TEMPLATE,
@@ -38,14 +34,15 @@ import {
   IPostgresCol,
   IPFConstraintsRes,
   IUniqueIndexesRes,
-  IEnumRes,
   IPostgresRes,
 } from '../interface'
 
 export class ParseQueryTemplate {
   private parseTemplatesData: IPostgresRes
+  private createdEnums: Array<string>
   constructor(data: IPostgresRes) {
     this.parseTemplatesData = data
+    this.createdEnums = []
   }
 
   public getMigrattion(): Promise<IParseTemplatesRes> {
@@ -60,7 +57,6 @@ export class ParseQueryTemplate {
               migration_query: this.getMigrationQuery(table),
             }
           }),
-          enum: this.getEnumMigration(this.parseTemplatesData.enums),
         }
         resolve(migration)
       } catch (error) {
@@ -70,6 +66,7 @@ export class ParseQueryTemplate {
   }
 
   private getMigrationQuery(table: IParseTableData): string {
+    const udData = table.cols.filter((c) => c.data_type === 'USER-DEFINED')
     return CREATE_TABLE_QUERY.replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.parseTemplatesData.schema)
       .replace(new RegExp(`${TABLE_TEMPLATE}`, GLOBAL), table.name)
       .replace(
@@ -79,6 +76,7 @@ export class ParseQueryTemplate {
       .replace(`${PRIMARY_KEYS_TEMPLATE}`, this.getPrimaryKeysWithConstraints(table.p_keys))
       .replace(`${UNIQUE_INDEXES_TEMPLATE}`, this.getUniqueIndexes(table.u_indexes))
       .replace(`${FOREIGN_KEYS_TEMPLATE}`, this.getForeignKeysWithConstraints(table.f_keys))
+      .replace(`${CREATE_ENUM_QUERY}`, udData.length > 0 ? this.getEnumMigration(udData) : '')
   }
 
   private getColumnsWithDataTypeAndDefault(cols: Array<IPostgresCol>, has_primary_keys: boolean): string {
@@ -133,19 +131,18 @@ export class ParseQueryTemplate {
       : ''
   }
 
-  private getEnumMigration(enums: Array<IEnumRes>): string {
-    return enums.length > 0
-      ? CREATE_ENUM_QUERY.replace(
-          `${CREATE_ENUM_QUERY_TEMPLATE}`,
-          enums
-            .map((en, i) =>
-              CREATE_ENUM_TEMPLATE.replace(`${ENUM_NAME_TEMPLATE}`, en.name).replace(
-                `${ENUM_VALUE_TEMPLATE}`,
-                en.values.map((e) => `'${e}'`).join(','),
-              ),
-            )
-            .join(' \n'),
-        )
-      : ''
+  private getEnumMigration(col: Array<IPostgresCol>): string {
+    let enumQueries = ''
+    const dTypes = col
+      .map((c) => this.parseTemplatesData.enums.find((e) => e.name === c.udt_name))
+      .filter((c) => !this.createdEnums.includes(c?.name!))
+    dTypes.forEach((d) => {
+      if (d) {
+        this.createdEnums.push(d?.name!)
+        const enumValues = d.values.map((value) => `'${value}'`).join(', ')
+        enumQueries += `CREATE TYPE "${d.name}" AS ENUM (${enumValues}); \n`
+      }
+    })
+    return enumQueries
   }
 }
