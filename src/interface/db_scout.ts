@@ -5,5 +5,6 @@
 
 export interface Props {
   sourceDbUrl: string
+  destinationDbUrl?: string
   outputDirectory?: string
 }
