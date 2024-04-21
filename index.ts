@@ -2,8 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import { ScoutPostgresqlDb } from './src/lib'
 import { IFile, Props } from './src/interface'
-import { ParseQueryTemplate, ValidateDatabaseUrl, createFiles, readFileSync } from './src/utils'
+import { ValidateDatabaseUrl, createFiles, readFileSync } from './src/utils'
 import { DB_SCOUT, DB_SCOUT_CONFIG_JSON } from './src/constants'
+import { PostgresqlClient } from './src/clients'
 
 export class DbScout {
   private props!: Props
@@ -37,23 +38,42 @@ export class DbScout {
   public getMigration(): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
-        const dbInfo = await new ScoutPostgresqlDb(this.props.sourceDbUrl).getDatabaseInfo()
-        const migration = await new ParseQueryTemplate(dbInfo).getMigrattion()
-
+        const migrationData = await new ScoutPostgresqlDb(this.props.sourceDbUrl).getMigrationWithOrder()
         if (!fs.existsSync(this.folderDir)) {
           fs.mkdirSync(this.folderDir, { recursive: true })
         }
         const files: Array<IFile> = []
-        migration.tables.forEach((t) =>
+        migrationData.tables.forEach((t) =>
           files.push({ filePath: path.join(this.folderDir, t.name + '.sql'), data: t.migration_query }),
         )
-        if (migration?.enum) {
-          files.push({ filePath: path.join(this.folderDir, '_enums.sql'), data: migration?.enum })
+        if (migrationData.migrationOrder) {
+          const json = {
+            isCircularDependent: migrationData.isCircularDependent,
+            migrationOrder: migrationData.migrationOrder,
+          }
+          files.push({ filePath: path.join(this.folderDir, '__metadata.json'), data: JSON.stringify(json) })
         }
         if (files.length > 0) {
           await createFiles(files)
         }
         resolve('success')
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  public runMigrationWithTransaction(): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (this.props.destinationDbUrl && this.props.outputDirectory) {
+          const migration = await new PostgresqlClient(this.props.destinationDbUrl).runMigrationWithTransaction(
+            this.props.outputDirectory,
+          )
+          resolve(migration)
+          return
+        }
+        throw new Error('error occurred')
       } catch (error) {
         reject(error)
       }
