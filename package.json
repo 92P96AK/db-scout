@@ -1,6 +1,6 @@
 {
   "name": "db-scout",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "get database information, generate migration files, create models based on information",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
