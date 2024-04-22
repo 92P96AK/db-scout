@@ -54,22 +54,14 @@ export class PostgresqlClient {
       try {
         await this.startConnection()
         await this.client.query('BEGIN')
-        const migrationFiles = fs.readdirSync(dir)
-        const metadataStr = fs.readFileSync(`${dir}/__metadata.json`, 'utf8')
-        const metaData: {
-          isCircularDependent: boolean
-          migrationOrder: Array<string>
-        } = JSON.parse(metadataStr)
-        if (!metadataStr || !metaData.migrationOrder?.length || !migrationFiles?.length) {
-          throw new Error(`Metadata | migration files not found | it has been changed`)
+        const migration = fs.readFileSync(`${dir}/migration.sql`, 'utf8')
+        if (!migration) {
+          throw new Error('Migration file not fount')
         }
-        for (const file of metaData.migrationOrder) {
-          const migrationScript = fs.readFileSync(`${dir}/${file}.sql`, 'utf8')
-          try {
-            await this.client.query(migrationScript)
-          } catch (error) {
-            throw new Error(`${dir}/${file}   ${error}`)
-          }
+        try {
+          await this.client.query(migration)
+        } catch (error) {
+          throw new Error(error)
         }
         await this.client.query('COMMIT')
         resolve('success')
