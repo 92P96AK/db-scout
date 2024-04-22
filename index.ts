@@ -42,17 +42,17 @@ export class DbScout {
         if (!fs.existsSync(this.folderDir)) {
           fs.mkdirSync(this.folderDir, { recursive: true })
         }
-        const files: Array<IFile> = []
-        migrationData.tables.forEach((t) =>
-          files.push({ filePath: path.join(this.folderDir, t.name + '.sql'), data: t.migration_query }),
-        )
-        if (migrationData.migrationOrder) {
-          const json = {
-            isCircularDependent: migrationData.isCircularDependent,
-            migrationOrder: migrationData.migrationOrder,
-          }
-          files.push({ filePath: path.join(this.folderDir, '__metadata.json'), data: JSON.stringify(json) })
-        }
+        const migrations = migrationData.tables.map((t) => t.migration_query).join('\n')
+        const files: Array<IFile> = [
+          {
+            filePath: path.join(this.folderDir, 'migration.sql'),
+            data: ` /*
+            Created by pradip kharal 
+            https://github.com/92P96AK 
+            */
+              ${migrations}`,
+          },
+        ]
         if (files.length > 0) {
           await createFiles(files)
         }
