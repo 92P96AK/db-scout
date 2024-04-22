@@ -39,7 +39,12 @@ export class MigrationOrder {
     try {
       let tableOrder: Array<IPostgresTableRes> = []
       let checkedTables: Array<string> = []
+      let numberOfLoops = 0
+      let maxNumberofLoops = tables.length * 5 // exit loop if it takes forever
       while (tables.length) {
+        if (numberOfLoops === maxNumberofLoops) {
+          throw new Error(`Perform ${maxNumberofLoops} time it seems circular dependency`)
+        }
         const initialElement = tables[0]
         tables = tables.slice(1)
         if (!(initialElement.f_keys.length > 0)) {
@@ -56,6 +61,7 @@ export class MigrationOrder {
             tables.push(initialElement)
           }
         }
+        numberOfLoops++
       }
       return tableOrder
     } catch (error) {
