@@ -212,6 +212,10 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
     type: 'USER-DEFINED',
     ormType: 'string',
   },
+  'SERIAL': {
+    type: 'SERIAL',
+    ormType: 'number',
+  },
 }
 
 export const NULLABLE_DATA = {
