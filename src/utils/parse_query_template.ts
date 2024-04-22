@@ -82,21 +82,28 @@ export class ParseQueryTemplate {
   private getColumnsWithDataTypeAndDefault(cols: Array<IPostgresCol>, has_primary_keys: boolean): string {
     const total_cols = cols.length
     return cols
-      .map(
-        (col, i) =>
-          `${TABLE_COL_TEMPLATE.replace(`${COL_NAME_TEMPLATE}`, col.column_name)
-            .replace(`${COL_TYPE_TEMPLATE}`, PostgresDataTypesAndOrm[`${col.udt_name}`]?.type || `"${col.udt_name}"`)
-            .replace(`${LENGTH_TEMPLATE}`, `${col.character_maximum_length}`)
-            .replace(`${PRECISION_TEMPLATE}`, col.numeric_precision ? `${col.numeric_precision}` : '')
-            .replace(`${SCALE_TEMPLATE}`, `${col.numeric_scale}`)
-            .replace(`${NULLABLE_TEMPLATE}`, NULLABLE_DATA[`${col.is_nullable}`])
-            .replace(
-              `${DEFAULT_VALUE_TEMPLATE}`,
-              col.column_default
-                ? DEFAULT_TEMPLATE.replace(`${DEFAULT_VALUE_TEMPLATE}`, col.column_default?.split('::')[0] || '')
-                : '',
-            )}${total_cols > i + 1 || has_primary_keys ? ',' : ''} \n`,
-      )
+      .map((col, i) => {
+        let def = col.column_default?.split('::')[0]
+        let udt_name = col.udt_name
+        if (col.udt_name === 'timestamp' && col.column_default?.includes('::interval')) {
+          def = col.column_default
+        }
+        if (col.data_type === 'integer' && col.column_default?.includes('nextval(')) {
+          udt_name = 'SERIAL'
+          def = ''
+        }
+
+        return `${TABLE_COL_TEMPLATE.replace(`${COL_NAME_TEMPLATE}`, col.column_name)
+          .replace(`${COL_TYPE_TEMPLATE}`, PostgresDataTypesAndOrm[`${udt_name}`]?.type || `"${udt_name}"`)
+          .replace(`${LENGTH_TEMPLATE}`, `${col.character_maximum_length}`)
+          .replace(`${PRECISION_TEMPLATE}`, col.numeric_precision ? `${col.numeric_precision}` : '')
+          .replace(`${SCALE_TEMPLATE}`, `${col.numeric_scale}`)
+          .replace(`${NULLABLE_TEMPLATE}`, NULLABLE_DATA[`${col.is_nullable}`])
+          .replace(
+            `${DEFAULT_VALUE_TEMPLATE}`,
+            def ? DEFAULT_TEMPLATE.replace(`${DEFAULT_VALUE_TEMPLATE}`, def) : '',
+          )}${total_cols > i + 1 || has_primary_keys ? ',' : ''} \n`
+      })
       .join('')
   }
 
