@@ -1,15 +1,5 @@
 # Changelog
 
-## Version 0.0.8 (2024-04-22)
-
-### Added
-- Added ability to run migration to destination database
-- Optimize migration files 
-- changed config file
-- Bug fixes 
-
-# Changelog
-
 ## Version 0.0.6 (2024-04-17)
 
 ### Added
