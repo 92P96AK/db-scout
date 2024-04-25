@@ -3,11 +3,14 @@ import fs from 'fs'
 
 export class Checksum {
   private filePath: string
-  constructor(filePath: string) {
-    this.filePath = filePath
+  constructor(filePath?: string) {
+    if (filePath) this.filePath = filePath
   }
-  public createChecksum(): Promise<string> {
+  public createChecksumWithFileUrl(): Promise<string> {
     return new Promise((resolve, reject) => {
+      if (!this.filePath) {
+        throw new Error('file path not found')
+      }
       const hash = crypto.createHash('sha256')
       const stream = fs.createReadStream(this.filePath)
       stream.on('data', (data) => {
@@ -26,11 +29,37 @@ export class Checksum {
   }
   public checkChecksum(checksum: string): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
-      const prevChecksum = await this.createChecksum()
-      if (checksum !== prevChecksum) {
-        throw new Error('Last migration file has been changed')
+      try {
+        const prevChecksum = await this.createChecksumWithFileUrl()
+        if (checksum !== prevChecksum) {
+          throw new Error('Last migration file has been changed')
+        }
+        resolve(true)
+      } catch (error) {
+        reject(error)
       }
-      resolve(true)
+    })
+  }
+  public createChecksumWithData(data: string): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const hash = crypto.createHash('sha256')
+        hash.update(data)
+        resolve(hash.digest('hex'))
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+  public checkChecksumWithData(sourceData: string, destinationData: string): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sourceChecksum = await this.createChecksumWithData(sourceData)
+        const destinationChecksum = await this.createChecksumWithData(destinationData)
+        resolve(sourceChecksum === destinationChecksum)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 }
