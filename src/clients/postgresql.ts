@@ -1,8 +1,6 @@
 import { Client } from 'pg'
 import { IConfig } from '../interface'
 import { ParseUrl } from '../utils'
-import fs from 'fs'
-
 export class PostgresqlClient {
   public parsedUrl: IConfig
   private client: Client
@@ -25,7 +23,6 @@ export class PostgresqlClient {
           database: this.parsedUrl.database,
           password: this.parsedUrl.password,
           port: this.parsedUrl.port,
-          // ssl: this.parsedUrl.ssl,
         })
         await this.client.connect()
         resolve(true)
@@ -49,15 +46,11 @@ export class PostgresqlClient {
     })
   }
 
-  public runMigrationWithTransaction(dir: string): Promise<string> {
+  public runMigrationWithTransaction(migration: string): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
         await this.startConnection()
         await this.client.query('BEGIN')
-        const migration = fs.readFileSync(`${dir}/migration.sql`, 'utf8')
-        if (!migration) {
-          throw new Error('Migration file not fount')
-        }
         try {
           await this.client.query(migration)
         } catch (error) {

@@ -8,3 +8,8 @@ export interface Props {
   destinationDbUrl?: string
   outputDirectory?: string
 }
+
+export interface DbUrlProps {
+  sourceDbUrl: string
+  destinationDbUrl?: string
+}

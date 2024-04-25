@@ -18,8 +18,6 @@ export interface IparseTableRes {
   migration_query: string
 }
 export interface IParseTemplatesRes {
-  database: string
-  schema: string
   tables: Array<IparseTableRes>
 }
 
@@ -31,7 +29,4 @@ export interface IMigrationOrder {
   }>
 }
 
-export interface ImigrationRes extends IParseTemplatesRes {
-  migrationOrder: Array<string>
-  isCircularDependent: boolean
-}
+export interface ImigrationRes extends IParseTemplatesRes {}

@@ -6,6 +6,8 @@ export {
   IPFConstraintsRes,
   IUniqueIndexesRes,
   IEnumRes,
+  IPostgresResDBS,
+  IDbInfoRes,
 } from './postgresql'
 export { IParseTemplatesData, IParseTableData, IparseTableRes, IParseTemplatesRes } from './common'
 export * from './common'

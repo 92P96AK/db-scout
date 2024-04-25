@@ -32,8 +32,6 @@ export interface IPostgresCol {
 }
 
 export interface IPostgresRes {
-  database: string
-  schema: string
   tables: Array<IPostgresTableRes>
   enums: Array<IEnumRes>
 }
@@ -61,4 +59,13 @@ export interface IUniqueIndexesRes {
   table_name: string
   index_name: string
   index_def: string
+}
+
+export interface IDbInfoRes {
+  enums: Array<IEnumRes>
+  tables: Array<IPostgresTableRes>
+}
+export interface IPostgresResDBS {
+  source: IDbInfoRes
+  destination?: IDbInfoRes
 }

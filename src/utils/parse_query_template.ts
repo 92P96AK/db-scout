@@ -19,6 +19,7 @@ import {
   INDEX_VALUE_TEMPLATE,
   UNIQUE_INDEXES_TEMPLATE,
   CREATE_ENUM_QUERY,
+  PUBLIC,
 } from '../constants'
 import {
   CREATE_TABLE_QUERY,
@@ -49,8 +50,6 @@ export class ParseQueryTemplate {
     return new Promise(async (resolve, reject) => {
       try {
         const migration: IParseTemplatesRes = {
-          schema: this.parseTemplatesData.schema,
-          database: this.parseTemplatesData.database,
           tables: this.parseTemplatesData.tables.map((table, i) => {
             return {
               name: table.name,
@@ -67,7 +66,7 @@ export class ParseQueryTemplate {
 
   private getMigrationQuery(table: IParseTableData): string {
     const udData = table.cols.filter((c) => c.data_type === 'USER-DEFINED')
-    return CREATE_TABLE_QUERY.replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.parseTemplatesData.schema)
+    return CREATE_TABLE_QUERY.replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), PUBLIC)
       .replace(new RegExp(`${TABLE_TEMPLATE}`, GLOBAL), table.name)
       .replace(
         `${TABLE_COLUMNS_WITH_NAME_TYPE_TEMPLATE}`,
@@ -129,7 +128,7 @@ export class ParseQueryTemplate {
       ? fkeys
           .map(
             (fkey) =>
-              `${FOREIGN_KEY_TEMPLATE.replace(`${SCHEMA_TYPE_TEMPLATE}`, this.parseTemplatesData.schema)
+              `${FOREIGN_KEY_TEMPLATE.replace(`${SCHEMA_TYPE_TEMPLATE}`, PUBLIC)
                 .replace(`${TABLE_TEMPLATE}`, fkey.table_name)
                 .replace(`${CONSTRAINT_NAME_TEMPLATE}`, fkey.constraint_name)
                 .replace(`${CONSTRAINT_VALUE_TEMPLATE}`, fkey.constraint_values)} \n`,
