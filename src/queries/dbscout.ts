@@ -1,5 +1,14 @@
-export const DBSCOUT_DB_CREATE_TABLE_QUERY = `
-CREATE TYPE "MigrationStatus" AS ENUM ('IDLE','SUCCESS', 'ROLLBACKED'); 
+export const DBSCOUT_SYSTEM_INFO_QUERY = `
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM pg_type 
+        WHERE typname = 'MigrationStatus'
+    ) THEN
+        CREATE TYPE "MigrationStatus" AS ENUM ('IDLE','SUCCESS', 'ROLLBACKED');
+    END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS public."_dbscout_migrations" (
     "id" VARCHAR(36) NOT NULL ,
