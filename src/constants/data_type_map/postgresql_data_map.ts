@@ -80,6 +80,10 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
     type: 'CHAR({{LENGTH}})',
     ormType: 'string',
   },
+  'text': {
+    type: 'text',
+    ormType: 'string',
+  },
   'bpchar': {
     type: 'CHAR({{LENGTH}})',
     ormType: 'string',
@@ -90,31 +94,35 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   },
   'timetz': {
     type: 'TIME WITH TIME ZONE',
-    ormType: 'string',
+    ormType: 'Date',
   },
   'timestamptz': {
     type: 'TIMESTAMP WITH TIME ZONE',
-    ormType: 'string',
+    ormType: 'Date',
   },
   'timestamp without time zone': {
     type: 'TIMESTAMP WITHOUT TIME ZONE',
-    ormType: 'string',
+    ormType: 'Date',
   },
   'timestamp with time zone': {
     type: 'TIMESTAMP WITH TIME ZONE',
-    ormType: 'string',
+    ormType: 'Date',
   },
   'time without time zone': {
     type: 'TIME WITHOUT TIME ZONE',
-    ormType: 'string',
+    ormType: 'Date',
   },
   'time with time zone': {
     type: 'TIME WITH TIME ZONE',
-    ormType: 'string',
+    ormType: 'Date',
   },
   'interval': {
     type: 'INTERVAL',
-    ormType: 'string',
+    ormType: 'Date',
+  },
+  'timestamp': {
+    type: 'TIMESTAMP WITH TIME ZONE',
+    ormType: 'Date',
   },
   'point': {
     type: 'POINT',
@@ -215,6 +223,10 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   'SERIAL': {
     type: 'SERIAL',
     ormType: 'number',
+  },
+  'bool': {
+    type: 'bool',
+    ormType: 'boolean',
   },
 }
 
