@@ -46,7 +46,7 @@ export class PostgresqlClient {
     })
   }
 
-  public runMigrationWithTransaction(migration: string): Promise<string> {
+  public runQueryWithTransaction(migration: string): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
         await this.startConnection()
@@ -54,7 +54,7 @@ export class PostgresqlClient {
         try {
           await this.client.query(migration)
         } catch (error) {
-          throw new Error(error)
+          throw new Error(`${error}`)
         }
         await this.client.query('COMMIT')
         resolve('success')
