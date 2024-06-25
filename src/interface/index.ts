@@ -1,5 +1,5 @@
-export { IConfig } from './db_url'
-export {
+export type { IConfig } from './db_url'
+export type {
   IPostgresCol,
   IPostgresRes,
   IPostgresTableRes,
@@ -8,8 +8,16 @@ export {
   IEnumRes,
   IPostgresResDBS,
   IDbInfoRes,
+  IPostgreSQlSeed,
+  IQueryProps,
 } from './postgresql'
-export { IParseTemplatesData, IParseTableData, IparseTableRes, IParseTemplatesRes } from './common'
-export * from './common'
-export * from './db_scout'
-export * from './file'
+export type {
+  IParseTableData,
+  IParseTemplatesData,
+  IparseTableRes,
+  IParseTemplatesRes,
+  IMigrationOrder,
+  ImigrationRes,
+} from './common'
+export type { Props, DbUrlProps } from './db_scout'
+export type { IFile } from './file'

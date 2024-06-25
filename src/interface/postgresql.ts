@@ -1,8 +1,9 @@
+import { RelationalSchema } from 'uncertainjs'
+
 export interface IPostgresCol {
   table_name: string
   table_schema: string
   column_name: string
-  ordinal_position: number
   column_default: string
   is_nullable: 'YES' | 'NO'
   data_type: string
@@ -17,9 +18,6 @@ export interface IPostgresCol {
   udt_catalog: string
   udt_schema: string
   udt_name: string
-  maximum_cardinality: number
-  is_self_referencing: 'YES' | 'NO'
-  is_identity: 'YES' | 'NO'
   identity_generation: string
   identity_start: string
   identity_increment: string
@@ -28,7 +26,6 @@ export interface IPostgresCol {
   identity_cycle: 'YES' | 'NO'
   is_generated: 'ALWAYS' | 'BY DEFAULT' | 'NEVER'
   generation_expression: string
-  is_updatable: 'YES' | 'NO'
 }
 
 export interface IPostgresRes {
@@ -68,4 +65,14 @@ export interface IDbInfoRes {
 export interface IPostgresResDBS {
   source: IDbInfoRes
   destination?: IDbInfoRes
+}
+
+export interface IPostgreSQlSeed {
+  schema?: RelationalSchema
+  exclude_tables?: Array<string>
+  copies?: number
+}
+
+export interface IQueryProps {
+  exclude_tables?: Array<string>
 }
