@@ -1,0 +1,8 @@
+src/
+build.ts
+tsconfig.json
+README.md
+.prettierrc
+.eslintrc.js
+.eslintignore
+.editorconfig
