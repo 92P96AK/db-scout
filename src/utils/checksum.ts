@@ -1,18 +1,20 @@
 import * as crypto from 'crypto'
-import fs from 'fs'
-
+import { File } from './file'
 export class Checksum {
-  private filePath: string
+  private filePath?: string
+  private file: File
+
   constructor(filePath?: string) {
+    this.file = new File()
     if (filePath) this.filePath = filePath
   }
   public createChecksumWithFileUrl(): Promise<string> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (!this.filePath) {
         throw new Error('file path not found')
       }
       const hash = crypto.createHash('sha256')
-      const stream = fs.createReadStream(this.filePath)
+      const stream = await this.file.createReadStream(this.filePath)
       stream.on('data', (data) => {
         hash.update(data)
       })

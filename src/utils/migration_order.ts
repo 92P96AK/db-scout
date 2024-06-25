@@ -32,7 +32,7 @@ export class MigrationOrder {
       }
       return dependentTables
     } catch (error) {
-      throw new Error(error)
+      throw new Error(`${error}`)
     }
   }
   getMigrationOrder(tables: Array<IPostgresTableRes>): Array<IPostgresTableRes> {
@@ -43,7 +43,13 @@ export class MigrationOrder {
       let maxNumberofLoops = tables.length * 5 // exit loop if it takes forever
       while (tables.length) {
         if (numberOfLoops === maxNumberofLoops) {
-          throw new Error(`Perform ${maxNumberofLoops} time it seems circular dependency`)
+          throw new Error(`It seems circular dependency in your schema, here is your tables \n ${tables
+            .map(
+              (table) =>
+                `Table Name : ${table.name} \n Columns :  ${table.cols.map((col) => col.column_name).join(',')}`,
+            )
+            .join('\n')}
+            `)
         }
         const initialElement = tables[0]
         tables = tables.slice(1)
@@ -65,7 +71,7 @@ export class MigrationOrder {
       }
       return tableOrder
     } catch (error) {
-      throw new Error(error)
+      throw new Error(`${error}`)
     }
   }
 }
