@@ -1,12 +1,12 @@
-import { DbUrlProps, IDbInfoRes, IPostgresResDBS, ImigrationRes } from '../interface'
-import { DB_INFO_QUERY } from '../queries'
+import { DbUrlProps, IDbInfoRes, IPostgresResDBS, IQueryProps, ImigrationRes } from '../interface'
+import queries from '../queries'
 import { GLOBAL, PUBLIC, PostgresDataTypesAndOrm, SCHEMA_TYPE_TEMPLATE } from '../constants'
 import { PostgresqlClient } from '../clients'
 import { MigrationOrder, ParseQueryTemplate } from '../utils'
 
 export class ScoutPostgresqlDb {
   private sourceClient: PostgresqlClient
-  private destinationClient: PostgresqlClient
+  private destinationClient?: PostgresqlClient
   private migrationOrderClass: MigrationOrder
   constructor(props: DbUrlProps) {
     this.sourceClient = new PostgresqlClient(props.sourceDbUrl)
@@ -16,26 +16,25 @@ export class ScoutPostgresqlDb {
     this.migrationOrderClass = new MigrationOrder()
   }
 
-  public getDatabaseInfo(): Promise<IPostgresResDBS> {
+  public getDatabaseInfo(props?: IQueryProps): Promise<IPostgresResDBS> {
     return new Promise(async (resolve, reject) => {
       try {
         const sourceDBInfo: Array<IDbInfoRes> = await this.sourceClient.query(
-          DB_INFO_QUERY.replace(
-            new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL),
-            this.sourceClient.parsedUrl.schema || PUBLIC,
-          ),
+          queries.DB_INFO_QUERY.postgresql
+            .replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.sourceClient.parsedUrl.schema || PUBLIC)
+            .replace('{{EXCLUDED_TABLES}}', `${props?.exclude_tables?.map((table) => `'${table}'`) ?? null}`),
         )
         if (this.destinationClient) {
           const destinationDBInfo: Array<IDbInfoRes> = await this.destinationClient.query(
-            DB_INFO_QUERY.replace(
-              new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL),
-              this.sourceClient.parsedUrl.schema || PUBLIC,
-            ),
+            queries.DB_INFO_QUERY.postgresql
+              .replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.sourceClient.parsedUrl.schema || PUBLIC)
+              .replace('{{EXCLUDED_TABLES}}', `${props?.exclude_tables?.map((table) => `'${table}'`) ?? null}`),
           )
           resolve({
             source: sourceDBInfo[0],
             destination: destinationDBInfo[0],
           })
+          return
         }
         resolve({
           source: sourceDBInfo[0],
@@ -46,7 +45,34 @@ export class ScoutPostgresqlDb {
     })
   }
 
-  getMigrationWithOrder(): Promise<ImigrationRes> {
+  getMigration(): Promise<ImigrationRes> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { source } = await this.getDatabaseInfo()
+        const circularDependency = await this.migrationOrderClass.checkCircularDependency(source.tables)
+
+        if (circularDependency.length) {
+          throw new Error(
+            ` you have circular dependent tables : ${circularDependency
+              .map((cd) => cd.map((c) => c.name).join(','))
+              .join('|')}`,
+          )
+        }
+        const order = await this.migrationOrderClass.getMigrationOrder(source.tables)
+        const queries = await new ParseQueryTemplate({
+          tables: order,
+          enums: source.enums,
+        }).getMigrattion()
+        resolve({
+          ...queries,
+        })
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  getMigrationDiff(): Promise<ImigrationRes> {
     return new Promise(async (resolve, reject) => {
       try {
         const { source, destination } = await this.getDatabaseInfo()
@@ -116,18 +142,15 @@ export class ScoutPostgresqlDb {
     })
   }
 
-  public getDatabaseDocumentation(): Promise<string> {
+  public getDatabaseDocumentation(props?: IQueryProps): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
         const sourceDBInfo: Array<IDbInfoRes> = await this.sourceClient.query(
-          DB_INFO_QUERY.replace(
-            new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL),
-            this.sourceClient.parsedUrl.schema || PUBLIC,
-          ),
+          queries.DB_INFO_QUERY.postgresql
+            .replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.sourceClient.parsedUrl.schema || PUBLIC)
+            .replace('{{EXCLUDED_TABLES}}', `${props?.exclude_tables?.map((table) => `'${table}'`) ?? null}`),
         )
         let doc = `
-       
-       //     Created by pradip kharal 
        //     https://github.com/92P96AK 
        `
 
@@ -168,18 +191,16 @@ export class ScoutPostgresqlDb {
       }
     })
   }
-  public getInterfaces(): Promise<string> {
+
+  public getInterfaces(props?: IQueryProps): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
         const sourceDBInfo: Array<IDbInfoRes> = await this.sourceClient.query(
-          DB_INFO_QUERY.replace(
-            new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL),
-            this.sourceClient.parsedUrl.schema || PUBLIC,
-          ),
+          queries.DB_INFO_QUERY.postgresql
+            .replace(new RegExp(`${SCHEMA_TYPE_TEMPLATE}`, GLOBAL), this.sourceClient.parsedUrl.schema || PUBLIC)
+            .replace('{{EXCLUDED_TABLES}}', `${props?.exclude_tables?.map((table) => `'${table}'`) ?? null}`),
         )
         let doc = `
-       
-       //     Created by pradip kharal 
        //     https://github.com/92P96AK 
 
        ${

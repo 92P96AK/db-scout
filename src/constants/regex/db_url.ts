@@ -1,2 +1,3 @@
-export const DB_URL_REGEX =
-  /^(?:postgresql|mysql|mongodb):\/\/(?:[^:]+):(?:[^@]+)@(?:[^:\/]+)(?::\d+)?\/[^\?]+(?:\?.*)?$/
+export const DB_URL_REGEX = /^(?:postgresql):\/\/(?:[^:]+):(?:[^@]+)@(?:[^:\/]+)(?::\d+)?\/[^\?]+(?:\?.*)?$/
+
+// only postgres support atm |mysql|mongodb

@@ -94,35 +94,35 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   },
   'timetz': {
     type: 'TIME WITH TIME ZONE',
-    ormType: 'Date',
+    ormType: 'timetz',
   },
   'timestamptz': {
     type: 'TIMESTAMP WITH TIME ZONE',
-    ormType: 'Date',
+    ormType: 'timestamptz',
   },
   'timestamp without time zone': {
     type: 'TIMESTAMP WITHOUT TIME ZONE',
-    ormType: 'Date',
+    ormType: 'timestamp',
   },
   'timestamp with time zone': {
     type: 'TIMESTAMP WITH TIME ZONE',
-    ormType: 'Date',
+    ormType: 'timestamptz',
   },
   'time without time zone': {
     type: 'TIME WITHOUT TIME ZONE',
-    ormType: 'Date',
+    ormType: 'time',
   },
   'time with time zone': {
     type: 'TIME WITH TIME ZONE',
-    ormType: 'Date',
+    ormType: 'timetz',
   },
   'interval': {
     type: 'INTERVAL',
-    ormType: 'Date',
+    ormType: 'interval',
   },
   'timestamp': {
     type: 'TIMESTAMP WITH TIME ZONE',
-    ormType: 'Date',
+    ormType: 'timestamptz',
   },
   'point': {
     type: 'POINT',
@@ -174,7 +174,7 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   },
   'uuid': {
     type: 'UUID',
-    ormType: 'string',
+    ormType: 'uuid',
   },
   'xml': {
     type: 'XML',
@@ -182,11 +182,11 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   },
   'json': {
     type: 'JSON',
-    ormType: 'string',
+    ormType: 'json',
   },
   'jsonb': {
     type: 'JSONB',
-    ormType: 'string',
+    ormType: 'jsonb',
   },
   'int4range': {
     type: 'INT4RANGE',
@@ -214,11 +214,11 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   },
   'ARRAY': {
     type: 'ARRAY',
-    ormType: 'string',
+    ormType: 'array',
   },
   'USER-DEFINED': {
     type: 'USER-DEFINED',
-    ormType: 'string',
+    ormType: 'user-defined',
   },
   'SERIAL': {
     type: 'SERIAL',
