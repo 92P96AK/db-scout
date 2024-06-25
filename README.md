@@ -49,7 +49,7 @@ Your migration files will be created in a specified directory.
 
 also to migrate generated migration files to destination url simply use
 
-await dbScout.runMigrationWithTransaction() 
+await dbScout.runMigration() 
 it will run migration in transaction so if any error occurred it will roll back.
 
 ```
@@ -64,4 +64,4 @@ DB-SCOUT is built using Node.js and PostgreSQL.
 
 ## Next Version Targets
 
-In the next version of DB-SCOUT, I plan to include support for additional databases, including MySQL, MariaDB, MongoDB, and others. Stay tuned for updates!
+In the next version of DB-SCOUT, I plan to include support for additional databases, including MySQL and others. Stay tuned for updates!
