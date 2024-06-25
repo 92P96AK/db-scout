@@ -1,4 +1,4 @@
-export const DBSCOUT_SYSTEM_INFO_QUERY = `
+const DBSCOUT_SYSTEM_INFO_QUERY = `
 DO $$
 BEGIN
     IF NOT EXISTS (
@@ -24,3 +24,7 @@ CREATE TABLE IF NOT EXISTS public."_dbscout_migrations" (
      CONSTRAINT "_dbscout_migrations_pkey" PRIMARY KEY ("id")
    );
 `
+
+export const dbscout = {
+  system_info: DBSCOUT_SYSTEM_INFO_QUERY,
+}
