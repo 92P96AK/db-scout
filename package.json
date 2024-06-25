@@ -1,16 +1,19 @@
 {
   "name": "db-scout",
-  "version": "0.0.10",
-  "type": "module",
+  "version": "0.0.11",
   "description": "get database information, generate migration files, create models based on information",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "npx tsc && node dist/index.js"
+    "prebuild": "tsc ./build.ts",
+    "build": "node ./build.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +28,7 @@
     "ORM",
     "TypeORM",
     "SQL",
+    "Postgresql",
     "database management",
     "database exploration",
     "db scout"
@@ -38,9 +42,8 @@
   "devDependencies": {
     "@types/node": "^20.12.6",
     "@types/pg": "^8.11.5",
-    "typescript": "^5.4.3"
-  },
-  "dependencies": {
-    "pg": "^8.11.5"
+    "pg": "^8.11.5",
+    "typescript": "^5.4.3",
+    "uncertainjs": "^0.0.20"
   }
 }
