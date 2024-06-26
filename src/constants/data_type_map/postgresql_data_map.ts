@@ -82,7 +82,7 @@ export const PostgresDataTypesAndOrm: PostgresDataTypesAndOrm = {
   },
   'text': {
     type: 'text',
-    ormType: 'string',
+    ormType: 'text',
   },
   'bpchar': {
     type: 'CHAR({{LENGTH}})',
