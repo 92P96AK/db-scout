@@ -35,6 +35,7 @@ export class MigrationOrder {
       throw new Error(`${error}`)
     }
   }
+  
   getMigrationOrder(tables: Array<IPostgresTableRes>): Array<IPostgresTableRes> {
     try {
       let tableOrder: Array<IPostgresTableRes> = []
