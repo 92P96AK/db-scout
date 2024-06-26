@@ -1,6 +1,6 @@
 {
   "name": "db-scout",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "get database information, generate migration files, create models based on information",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -44,6 +44,6 @@
     "@types/pg": "^8.11.5",
     "pg": "^8.11.5",
     "typescript": "^5.4.3",
-    "uncertainjs": "^0.1.1"
+    "uncertainjs": "^0.1.2"
   }
 }
